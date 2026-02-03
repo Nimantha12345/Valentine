@@ -24,6 +24,8 @@
             font-size: 20px;
             animation: float 5s infinite linear;
             opacity: 0;
+            z-index: 999; /* Higher value moves it to the front */
+            pointer-events: none; /* Prevents hearts from blocking clicks/touches */
         }
 
         @keyframes float {
@@ -155,3 +157,4 @@
 </body>
 
 </html>
+
