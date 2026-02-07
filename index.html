@@ -17,15 +17,15 @@
             overflow: hidden;
         }
 
-        /* Floating Hearts Background */
+        /* Floating Hearts - Updated to stay ON TOP */
         .heart {
             position: absolute;
             color: #ff4d6d;
             font-size: 20px;
             animation: float 5s infinite linear;
             opacity: 0;
-            z-index: 999; /* Higher value moves it to the front */
-            pointer-events: none; /* Prevents hearts from blocking clicks/touches */
+            z-index: 999; 
+            pointer-events: none; 
         }
 
         @keyframes float {
@@ -40,8 +40,8 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            z-index: 10;
-            width: 350px; /* Card eka lassanata thiyaganna */
+            z-index: 10; 
+            width: 350px;
             animation: fadeIn 2s ease-in;
         }
 
@@ -81,12 +81,12 @@
         }
 
         .mySlides {
-            display: none; /* Okkoma photos hide karala thiyenne */
-            border-radius: 50%; /* Rawum widihata thiyenna */
+            display: none;
+            border-radius: 50%;
             object-fit: cover;
             width: 100%;
             height: 100%;
-            animation: fadeEffect 1s; /* Maru weddi lassanata penna */
+            animation: fadeEffect 1s;
         }
 
         @keyframes fadeEffect {
@@ -94,9 +94,15 @@
             to {opacity: 1}
         }
 
-         /* Buttons Styling */
-        .btn-container { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
-        .btn {
+        /* --- BUTTON STYLES --- */
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .choice-btn {
             padding: 10px 25px;
             font-size: 1rem;
             border: none;
@@ -104,14 +110,31 @@
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
+            color: white;
         }
-        #yesBtn { background-color: #ff4d6d; color: white; }
-        #noBtn { background-color: #808080; color: white; position: relative; }
 
-        /* Response View */
-        #responseArea { display: none; margin-top: 15px; }
-        #responseImg { width: 150px; border-radius: 10px; margin-top: 10px; }
+        #yesBtn { background-color: #ff4d6d; }
+        
+        /* No button ekata transition damma lassanata duwana widiha penna */
+        #noBtn { 
+            background-color: #999; 
+            position: relative; 
+            transition: all 0.2s ease;
+        }
 
+        /* Final Image Styling */
+        #finalImageContainer {
+            display: none;
+            margin-top: 15px;
+        }
+
+        #finalImg {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            object-fit: cover;
+            animation: fadeIn 1s;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +142,7 @@
     <div class="card">
         <div class="main-heart">❤️</div>
         
-        <div class="slideshow-container">
+        <div class="slideshow-container" id="slideshowArea">
             <img src="1.jpg" width="500px" height="500px" class="mySlides">
             <img src="2.jpg" width="500px" height="500px" class="mySlides">
             <img src="3.jpg" width="500px" height="500px" class="mySlides">
@@ -127,24 +150,24 @@
             <img src="5.jpg" width="500px" height="500px" class="mySlides">
         </div>
 
-        <h1>Happy Valentine's Day! <br> Mage Sudu Manika</h1>
-        <p>You are the most beautiful part of my life and <br> I am so lucky to have you by my side.<br>Thank you for filling my days with so much love and happiness.<br>I promise to love you more with every heartbeat.</p>
-        <p>Will you be mine forever? 🌹</p>
-    </div>
-
-    <div class="btn-container" id="buttonGroup">
-            <button class="btn" id="yesBtn" onclick="showResponse('yes')">Yes</button>
-            <button class="btn" id="noBtn" onmouseover="moveNoButton()">No</button>
+        <div id="finalImageContainer">
+            <img id="finalImg" src="" alt="Response">
+            <h2 id="finalText" style="color: #c9184a; margin-top: 10px;"></h2>
         </div>
 
-        <div id="responseArea">
-            <h2 id="responseText" style="color: #c9184a;"></h2>
-            <img id="responseImg" src="" alt="Response Image">
+        <div id="mainText">
+            <h1>Happy Valentine's Day! <br> Mage Sudu Manika</h1>
+            <p>You are the most beautiful part of my life and <br> I am so lucky to have you by my side.<br>Thank you for filling my days with so much love and happiness.<br>I promise to love you more with every heartbeat.</p>
+            <p>Will you be mine forever? 🌹</p>
+        </div>
+
+        <div class="btn-group" id="btnGroup">
+            <button class="choice-btn" id="yesBtn" onclick="handleResponse('yes')">Yes</button>
+            <button class="choice-btn" id="noBtn" onmouseover="moveNoButton()" onclick="handleResponse('no')">No</button>
         </div>
     </div>
 
     <script>
-        // 1. Floating Hearts Logic
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -159,62 +182,54 @@
         }
         setInterval(createHeart, 300);
 
-        // 2. Slideshow Logic
         let slideIndex = 0;
+        let slideshowActive = true;
         showSlides();
 
         function showSlides() {
+            if (!slideshowActive) return; 
             let slides = document.getElementsByClassName("mySlides");
-            
-            // Okkoma images hide karanna
             for (let i = 0; i < slides.length; i++) {
                 slides[i].style.display = "none";  
             }
-            
             slideIndex++;
-            if (slideIndex > slides.length) {
-                slideIndex = 1;
-            }    
-            
-            // Dan thiyena image eka vitharak pennanna
+            if (slideIndex > slides.length) {slideIndex = 1}    
             slides[slideIndex-1].style.display = "block";  
-            
-            setTimeout(showSlides, 3000); // Thathpara 3kata serayak maru wenawa
+            setTimeout(showSlides, 3000);
         }
 
-        // No Button Magic (Moves when mouse comes near)
+        // NO button eka duwana logic eka
         function moveNoButton() {
             const noBtn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            // Screen eke ida anuwa random thanakata button eka yawanna
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
             
-            noBtn.style.position = 'absolute';
+            noBtn.style.position = 'fixed'; // Body ekema thuna thuna duwanna
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
         }
 
-        // Show Response
-        function showResponse(answer) {
-            const slideshow = document.getElementById('slideshow');
-            const btnGroup = document.getElementById('buttonGroup');
-            const responseArea = document.getElementById('responseArea');
-            const responseText = document.getElementById('responseText');
-            const responseImg = document.getElementById('responseImg');
+        function handleResponse(answer) {
+            slideshowActive = false; 
+            document.getElementById('slideshowArea').style.display = 'none';
+            document.getElementById('mainText').style.display = 'none';
+            document.getElementById('btnGroup').style.display = 'none';
+            
+            const container = document.getElementById('finalImageContainer');
+            const img = document.getElementById('finalImg');
+            const text = document.getElementById('finalText');
+            
+            container.style.display = 'block';
 
-            btnGroup.style.display = 'none';
-            slideshow.style.display = 'none';
-            responseArea.style.display = 'block';
-
-            if(answer === 'yes') {
-                responseText.innerText = "I Love You Forever! ❤️";
-                responseImg.src = "Hugging Hug GIF.gif"; // Methana oyage 'Yes' image eka danna
+            if (answer === 'yes') {
+                img.src = 'Hugging Hug GIF.gif'; 
+                text.innerText = 'I love you so much & forever ! ❤️';
+            } else {
+                img.src = 'sad_image.jpg'; 
+                text.innerText = 'Oh no... give me one more chance? 🥺';
             }
         }
     </script>
-
 </body>
-
 </html>
-
-
-
