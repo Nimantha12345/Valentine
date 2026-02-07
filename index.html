@@ -94,6 +94,24 @@
             to {opacity: 1}
         }
 
+         /* Buttons Styling */
+        .btn-container { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
+        .btn {
+            padding: 10px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        #yesBtn { background-color: #ff4d6d; color: white; }
+        #noBtn { background-color: #808080; color: white; position: relative; }
+
+        /* Response View */
+        #responseArea { display: none; margin-top: 15px; }
+        #responseImg { width: 150px; border-radius: 10px; margin-top: 10px; }
+
     </style>
 </head>
 <body>
@@ -112,6 +130,17 @@
         <h1>Happy Valentine's Day! <br> Mage Sudu Manika</h1>
         <p>You are the most beautiful part of my life and <br> I am so lucky to have you by my side.<br>Thank you for filling my days with so much love and happiness.<br>I promise to love you more with every heartbeat.</p>
         <p>Will you be mine forever? 🌹</p>
+    </div>
+
+    <div class="btn-container" id="buttonGroup">
+            <button class="btn" id="yesBtn" onclick="showResponse('yes')">Yes</button>
+            <button class="btn" id="noBtn" onmouseover="moveNoButton()">No</button>
+        </div>
+
+        <div id="responseArea">
+            <h2 id="responseText" style="color: #c9184a;"></h2>
+            <img id="responseImg" src="" alt="Response Image">
+        </div>
     </div>
 
     <script>
@@ -152,10 +181,40 @@
             
             setTimeout(showSlides, 3000); // Thathpara 3kata serayak maru wenawa
         }
+
+        // No Button Magic (Moves when mouse comes near)
+        function moveNoButton() {
+            const noBtn = document.getElementById('noBtn');
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        // Show Response
+        function showResponse(answer) {
+            const slideshow = document.getElementById('slideshow');
+            const btnGroup = document.getElementById('buttonGroup');
+            const responseArea = document.getElementById('responseArea');
+            const responseText = document.getElementById('responseText');
+            const responseImg = document.getElementById('responseImg');
+
+            btnGroup.style.display = 'none';
+            slideshow.style.display = 'none';
+            responseArea.style.display = 'block';
+
+            if(answer === 'yes') {
+                responseText.innerText = "I Love You Forever! ❤️";
+                responseImg.src = "Hugging Hug GIF.gif"; // Methana oyage 'Yes' image eka danna
+            }
+        }
     </script>
 
 </body>
 
 </html>
+
 
 
