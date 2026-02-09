@@ -25,11 +25,9 @@ function showSlides() {
 }
 showSlides();
 
-// NO Button එක පනින logic එක
 function moveNoButton() {
     const noBtn = document.getElementById('noBtn');
     
-    // එක පාරක් Hover/Touch කළාම position එක fixed කරලා මුළු screen එකේම පනින්න සලස්වනවා
     noBtn.style.position = 'fixed'; 
 
     const padding = 50;
@@ -58,4 +56,5 @@ function handleResponse(answer) {
         img.src = 'Hugging Hug GIF.gif';
         text.innerText = 'I love you so much Suddi! ❤️';
     }
+
 }
